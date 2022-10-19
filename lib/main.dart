@@ -1,7 +1,14 @@
 import 'dart:developer';
+import 'dart:js_util';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project1/data.dart';
+import 'package:project1/data_model.dart';
+import 'globels.dart' as globals;
+
+import 'main_screen.dart';
 
 void main() {
   runApp(sensitive());
@@ -9,12 +16,14 @@ void main() {
 
 class sensitive extends StatelessWidget {
   @override
+  int id = 0;
   Widget build(BuildContext context) {
     // TODO: implement build
     return ScreenUtilInit(
       designSize: const Size(262, 577),
       builder: (context, child) {
-        return MaterialApp(debugShowCheckedModeBanner: false, home: MyApp());
+        return MaterialApp(
+            debugShowCheckedModeBanner: false, home: mainScreen());
       },
     );
   }
@@ -22,13 +31,17 @@ class sensitive extends StatelessWidget {
 
 class MyApp extends StatefulWidget {
   @override
-  State<MyApp> createState() => _MyAppState();
+  final int id;
+  MyApp(this.id);
+  State<MyApp> createState() => _MyAppState(id);
 }
 
 class _MyAppState extends State<MyApp> {
   @override
+  int id;
+  _MyAppState(this.id);
   bool isfavorite = false;
-
+  late DataModel datamodel;
   void toggleFavorite() {
     setState(() {
       if (isfavorite) {
@@ -56,7 +69,7 @@ class _MyAppState extends State<MyApp> {
               SizedBox(
                 height: 250.h,
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  padding: EdgeInsets.fromLTRB(20.w, 0, 20, 20.w),
                   color: Color.fromRGBO(162, 197, 69, 1),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,9 +81,15 @@ class _MyAppState extends State<MyApp> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Icon(
-                                  Icons.arrow_back,
-                                  color: Color.fromRGBO(249, 255, 228, 20),
+                                IconButton(
+                                  onPressed: () {
+                                    globals.id = 0;
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                    color: Color.fromRGBO(249, 255, 228, 20),
+                                  ),
                                 ),
                                 Icon(
                                   Icons.mail_outline,
@@ -81,7 +100,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ),
                         Text(
-                          "Green tea",
+                          data[id].name,
                           style: TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
@@ -89,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                         ),
                         Text(
                           textAlign: TextAlign.right,
-                          "Signature product",
+                          data[id].type,
                           style: TextStyle(
                             fontSize: 15,
                             color: Color.fromRGBO(249, 255, 228, 5),
@@ -107,7 +126,7 @@ class _MyAppState extends State<MyApp> {
                               color: Color.fromRGBO(249, 255, 228, 5),
                             ),
                             Text(
-                              "36",
+                              data[id].price.toString(),
                               style: TextStyle(
                                 fontSize: 60,
                                 fontWeight: FontWeight.bold,
@@ -205,7 +224,7 @@ class _MyAppState extends State<MyApp> {
                                   ),
                                   Padding(
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 5)),
-                                  Text("500ml",
+                                  Text(data[id].size.toString(),
                                       style: TextStyle(
                                         color: Color.fromRGBO(135, 184, 32, 1),
                                       ))
@@ -302,11 +321,12 @@ class _MyAppState extends State<MyApp> {
                             ),
                             onTap: () {
                               toggleFavorite();
-                              log(isfavorite.toString());
                             },
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              data[id].cartFlag = true;
+                            },
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
@@ -329,7 +349,7 @@ class _MyAppState extends State<MyApp> {
               left: 150.w,
               top: 85.h,
               child: Image.asset(
-                "images/greentea.png",
+                data[id].image,
                 width: 100.w,
                 height: 170.h,
               ),
