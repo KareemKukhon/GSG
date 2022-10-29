@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import 'data.dart';
+import 'globals.dart';
 
 class shoppingCart extends StatefulWidget {
   const shoppingCart({super.key});
@@ -12,28 +13,10 @@ class shoppingCart extends StatefulWidget {
   State<shoppingCart> createState() => _shoppingCartState();
 }
 
-double sum1 = 0;
-
 class _shoppingCartState extends State<shoppingCart> {
   @override
-  double multy(int index) {
-    double mult = 0;
-    mult = data
-            .where((element) => element.cartFlag)
-            .toList()[index]
-            .price
-            .toDouble() *
-        data
-            .where((element) => element.cartFlag)
-            .toList()[index]
-            .numberItemInCart
-            .toDouble();
-    sum1 += mult;
-
-    return sum1;
-  }
-
   Widget build(BuildContext context) {
+    multy();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -71,98 +54,100 @@ class _shoppingCartState extends State<shoppingCart> {
             child: ListView.builder(
               itemCount: data.where((element) => element.cartFlag).length,
               itemBuilder: (context, index) {
-                sum1 = multy(index);
-                return Container(
-                  margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          height: 90,
-                          width: 90,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: data[index].name.contains("Green tea")
-                                ? Color.fromRGBO(162, 197, 69, 1)
-                                : Color.fromRGBO(193, 209, 81, 1),
-                          ),
-                          child: Image.asset(data
-                              .where((element) => element.cartFlag)
-                              .toList()[index]
-                              .image)),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data
+                if (data[index].numberItemInCart > 0) {
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            height: 90,
+                            width: 90,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: data[index].name.contains("Green tea")
+                                  ? Color.fromRGBO(162, 197, 69, 1)
+                                  : Color.fromRGBO(193, 209, 81, 1),
+                            ),
+                            child: Image.asset(data
                                 .where((element) => element.cartFlag)
                                 .toList()[index]
-                                .name,
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Text(data
-                              .where((element) => element.cartFlag)
-                              .toList()[index]
-                              .type),
-                          SizedBox(
-                            height: 18,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.currency_yen_sharp,
-                                color: Color.fromRGBO(162, 197, 69, 1),
-                              ),
-                              Text(
-                                data
-                                    .where((element) => element.cartFlag)
-                                    .toList()[index]
-                                    .price
-                                    .toString(),
-                                style: TextStyle(
-                                    color: Color.fromRGBO(162, 197, 69, 1)),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Column(
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                sum1 = 0;
-                                data[index].numberItemInCart++;
-                                setState(() {});
-                              },
-                              child: Icon(Icons.add)),
-                          Text(data
-                              .where((element) => element.cartFlag)
-                              .toList()[index]
-                              .numberItemInCart
-                              .toString()),
-                          InkWell(
-                              onTap: () {
-                                sum1 = 0;
-                                if (data
-                                        .where((element) => element.cartFlag)
-                                        .toList()[index]
-                                        .numberItemInCart >
-                                    0)
+                                .image)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data
+                                  .where((element) => element.cartFlag)
+                                  .toList()[index]
+                                  .name,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(data
+                                .where((element) => element.cartFlag)
+                                .toList()[index]
+                                .type),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.currency_yen_sharp,
+                                  color: Color.fromRGBO(162, 197, 69, 1),
+                                ),
+                                Text(
                                   data
                                       .where((element) => element.cartFlag)
                                       .toList()[index]
-                                      .numberItemInCart--;
-                                setState(() {});
-                              },
-                              child: Icon(Icons.minimize))
-                        ],
-                      )
-                    ],
-                  ),
-                );
+                                      .price
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(162, 197, 69, 1)),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Column(
+                          children: [
+                            InkWell(
+                                onTap: () {
+                                  sum1 = 0;
+                                  data[index].numberItemInCart++;
+                                  setState(() {});
+                                },
+                                child: Icon(Icons.add)),
+                            Text(data
+                                .where((element) => element.cartFlag)
+                                .toList()[index]
+                                .numberItemInCart
+                                .toString()),
+                            InkWell(
+                                onTap: () {
+                                  sum1 = 0;
+                                  if (data
+                                          .where((element) => element.cartFlag)
+                                          .toList()[index]
+                                          .numberItemInCart >
+                                      0)
+                                    data
+                                        .where((element) => element.cartFlag)
+                                        .toList()[index]
+                                        .numberItemInCart--;
+                                  setState(() {});
+                                },
+                                child: Icon(Icons.minimize))
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                } else
+                  return widget;
               },
             ),
           ),

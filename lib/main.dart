@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:js_util';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +12,9 @@ import 'globals.dart' as globals;
 import 'main_screen.dart';
 
 void main() {
-  runApp(sensitive());
+  runApp(
+     sensitive(),
+     );
 }
 
 class sensitive extends StatelessWidget {
